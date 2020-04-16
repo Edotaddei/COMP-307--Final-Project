@@ -1,0 +1,32 @@
+<style>
+	div.c_panel{
+        float: right;
+    }
+    a:link {
+    	color: blue;
+    	text-decoration: none;
+	}
+
+	/* visited link */
+	a:visited {
+  		color: purple;
+	}
+
+	/* mouse over link */
+	a:hover {
+  		color: green;
+  		text-decoration: underline;
+	}
+</style>
+<div class="c_panel">
+<a href="{% url 'index' %}">Chat</a>
+<a href="{% url 'shop' %}">Shop</a>
+<a href="{% url 'account_info' %}">My account</a>
+<a href="{% url 'signup' %}">Signup</a>
+<!--<a href="{% url 'login' %}">Login</a>-->
+<a href="{% url 'logout' %}">Logout</a>
+</div>
+
+<p>
+	{{request.user.username}}
+</p>
