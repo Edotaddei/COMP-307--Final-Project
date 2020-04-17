@@ -1,0 +1,14 @@
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %}Listings{% endblock title %}
+
+{% block content %}
+	{% for p in products %}
+	<p>
+		<img src="{{p.image.url}}"/><br />
+		<a href="{% url 'product:detail' %}">{{p.name}}</a> <br />
+	</p>
+	{% endfor %}
+{% endblock content %}
+
