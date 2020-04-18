@@ -1,0 +1,23 @@
+{% extends 'listing/base.html' %}
+{% load static%}
+
+
+
+{% block content %}
+<h1>{{product.name}}</h1>
+<img src="{{product.image}}"> <br/>
+Seller : {{product.owner}} <br/> <!-- Add link to message room -->
+{{product.description}} <br/>
+Price : {{product.price}} CAD <br/>
+Available: {{product.count}}<br/>
+
+<!--<button type="submit">Add to Cart</button><br/>-->
+
+<a href="{% url 'listing:addtocart' product.id%}">Add to cart</a> <br/>
+
+
+<a href="/notdoneyet">Contact Seller</a> <br/>
+
+<a href="{% url 'listing:trade' product.id%}">Trade for this item</a>
+
+{% endblock content %}
