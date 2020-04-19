@@ -1,0 +1,52 @@
+
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %} Cart {% endblock title %}
+
+{% block content %}
+	<h1>{{request.user.username}}'s cart</h1> 
+	<h1>{{request.user.username}}'s cart</h1> 
+	
+
+	
+	{% if list %}
+
+		{% for p in list %}
+		 
+			{% if not p.is_ordered %}
+				
+				{% if p.owner.username == request.user.username %}
+
+					{% for i in p.products.all %}
+
+
+						<p>
+							{{i}}
+							<a href="{% url 'listing:deletefromcart' i.id%}">Remove item from cart</a>
+
+							
+						</p>
+
+
+					{% endfor %}
+					{% if p.gettotalprice > 0 %}
+					<p>Total price of cart: {{p.gettotalprice}} CAD</p>
+					{% else %}
+					<p>Cart is currently empty</p>
+					{%endif%}
+				{% endif %}
+
+			{% endif %}
+			
+	
+		{% endfor %}
+
+	{% else %}
+		<p>No products</p>
+	{% endif %}
+
+
+{% endblock content %}
+
+

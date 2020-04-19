@@ -1,0 +1,30 @@
+{% load static %}
+<! DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Title here{% endblock title %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Description goes here TODO">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <!-- Load scripts here -->
+    <!-- Icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <ul>
+        <li class="l"><a href="{% url 'listing:home' %}"><i class="fa fa-home"></i></a></li>
+        <li class="l"><a href="{% url 'listing:list' %}">Shop</a></li>
+        <li class="l"><a href="{% url 'listing:new' %}">Sell</a></li>
+        <li class="r"><a href="{% url 'account:account_info' %}"><i class="fa fa-user"></i></a></li>
+        <li class="r"><a href="{% url 'chat:index' %}"><i class="fa fa-comments"></i></a></li>
+        <li class="r"><a href="{% url 'listing:cart' %}"><i class="fa fa-shopping-cart"></i></a></li>
+    </ul>
+    {% block content %}
+    {% endblock %}
+<footer>
+    &copy; Vintage By Yourself
+</footer>
+</body>
+</html>
