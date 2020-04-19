@@ -10,8 +10,8 @@
 		<h1>Welcome to your account, {{request.user.username}}</h1>
 
 		<a href="{% url 'listing:myproducts' %}" class="btn">View your products currently on sale</a> <br/>
-		<a href="{% url 'chat:room' request.user.username%}" class="btn">Join your chat room</a> <br/>
-		<a href="{% url 'account:logout' %}" class="btn">Log out</a>
+		<a href="" class="btn"> View your orders</a> <br/>
+		<a href="{% url 'account:logout' %}" class="btn">Log out</a> <br/>
 	</section>
 
 

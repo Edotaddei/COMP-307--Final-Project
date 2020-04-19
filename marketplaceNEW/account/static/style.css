@@ -5,6 +5,12 @@ article {font-family: "Courier New"}
 
 .page-content{padding-top:5px}
 
+img {
+ height:100px ;
+ width: 100px;
+ object-fit:scale-down;
+}
+
 ul {
 	position: fixed;
 	top: 0;
@@ -17,6 +23,7 @@ ul {
 }
 
 li.l{float: left;}
+li.c{float: center;}
 li.r{float: right;}
 
 li a{

@@ -3,8 +3,8 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.urls import reverse
 from django.utils import timezone
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import Product,Order, OrderProduct
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from .models import Product, Order, OrderProduct
 from .forms import ProductForm, ProductUpdateForm
 from django.views.generic import (DetailView,
                                   ListView,
@@ -15,55 +15,40 @@ from django.views.generic import (DetailView,
 
 from django.contrib.auth.decorators import login_required
 
+
 @login_required
-def ProductCreate(request):
+def product_create(request):
     context = {}
     if request.method == 'POST':
 
         form = ProductForm(request.POST, request.FILES)
-        #form.photo = request.FILES['photo']
+        # form.photo = request.FILES['photo']
         if form.is_valid():
             inst = form.save(commit=False)
-            inst.owner= request.user
+            inst.owner = request.user
             inst.save()
             return HttpResponseRedirect(reverse('listing:list'))
         context['form'] = form
-    return render(request, 'listing/product_form.html',context)
+    return render(request, 'listing/product_form.html', context)
 
 
-def ProductTrade(request, **kwargs):
+def product_trade(request, **kwargs):
     primary_key = kwargs['pk']
     try:
-        product = Product.objects.get(pk = primary_key)
+        product = Product.objects.get(pk=primary_key)
         user = request.user
     except Product.DoesNotExist:
-        raise HTTP404("Product does not exist")
+        raise Http404("Product does not exist")
 
     my_products = Product.objects.all().filter(owner=user)
-    return render(request, 'listing/product_trade_form.html', context={'product':product, 'user':user, 'mine':my_products})
+    return render(request, 'listing/product_trade_form.html',
+                  context={'product': product, 'user': user, 'mine': my_products})
 
-
-#class ProductCreate(CreateView):
- #   model = Product
-  #  form_class = ProductForm
-   # template_name = 'listing/product_form.html'
-    #@method_decorator(login_required)
-    #def get_success_url(self):
-     #   messages.success(self.request, 'Product added to the marketplace!')
-      #  return self.object.get_absolute_url()
-       # #return HttpResponseRedirect(reverse('list'))
 
 class ProductDetail(DetailView):
     model = Product
     template_name = 'listing/product_detail.html'
-    
 
-    def detail_view(request, primary_key, **kwargs):
-      try:
-        product = Product.objects.get(pk = primary_key)
-      except Product.DoesNotExist:
-        raise HTTP404("Product does not exist")
-      return render(request, template_name, context={'product': product})
 
 class HomeView(TemplateView):
     model = Product
@@ -76,68 +61,86 @@ class ProductList(ListView):
     template_name = 'listing/product_list.html'
 
     def get_context_data(self, **kwargs):
-      context = ListView.get_context_data(self,**kwargs)
-      return context
-    
+        context = ListView.get_context_data(self, **kwargs)
+        return context
 
 
 class ProductUpdate(UpdateView):
     model = Product
-    fields = ['name','image','description','price','count','category']
-    template_name_suffix='_form_update'
-    success_url ="/listing/products"
+    fields = ['name', 'image', 'description', 'price', 'count', 'category']
+    template_name_suffix = '_form_update'
+    success_url = "/listing/products"
+
 
 class ProductDelete(DeleteView):
-  model = Product
-  success_url ="/listing/products"
+    model = Product
+    success_url = "/listing/products"
 
-class CartDelete(DeleteView):
-  model = OrderProduct
-  success_url = "/listing/cart"
-  
 
 class Cart(ListView):
     model = Order
-    context_object_name = 'list'
+    context_object_name = 'orders'
     template_name = 'listing/cart.html'
 
     def get_context_data(self, **kwargs):
-      context = ListView.get_context_data(self,**kwargs)
-      return context
+        context = ListView.get_context_data(self, **kwargs)
+        return context
 
 
-def addtocart(request, **kwargs):
-  primary_key = kwargs['pk']
-  try:
-    product = Product.objects.get(pk = primary_key)
+def add_to_cart(request, **kwargs):
+    primary_key = kwargs['pk']
+    try:
+        product = Product.objects.get(pk=primary_key)
 
-  except Product.DoesNotExist:
-        raise HTTP404("Product does not exist")
-  if product.count<1:
-    return HttpResponse("Product no longer in stock")
-  else:
-    product.count -=1
+    except Product.DoesNotExist:
+        raise Http404("Product does not exist")
+    if product.count < 1:
+        return HttpResponse("Product no longer in stock")
+    else:
+        product.count -= 1
+        product.save()
+
+    order_product, created = OrderProduct.objects.get_or_create(product=product, is_ordered=False)
+    try:
+        order = Order.objects.get(owner=request.user, is_ordered=False)
+    except Order.DoesNotExist:
+        order = Order.objects.create(owner=request.user, date=timezone.now())
+        order.products.add(order_product)
+        order.save()
+        return HttpResponseRedirect(reverse('listing:list'))
+    if order.products.filter(product_id=primary_key).exists():
+        order_product.count += 1
+        order_product.save()
+    else:
+        order.products.add(order_product)
+        order.save()
+
+    return HttpResponseRedirect(reverse('listing:list'))
+
+
+def remove_from_cart(request, **kwargs):
+    primary_key = kwargs['pk']
+    try:
+        order_product = OrderProduct.objects.get(pk=primary_key)
+    except OrderProduct.DoesNotExist:
+        raise Http404("OrderProduct does not exist")
+    order_product.count -= 1
+    if order_product.count == 0:
+        order_product.delete()
+    else:
+        order_product.save()
+
+    try:
+        product = Product.objects.get(name=order_product.product)
+    except Product.DoesNotExist:
+        raise Http404("Product does not exist")
+    product.count += 1
     product.save()
 
-  order_product,created = OrderProduct.objects.get_or_create(product=product, owner_name=request.user.username, is_ordered=False)
-
-  current_order = Order.objects.filter(owner=request.user, is_ordered=False)
-  if current_order:
-    order = current_order[0]
-    #return HttpResponse('hello')
-    
-    if order.products.filter(product_id = primary_key).exists():
-      order_product.count +=1
-      order_product.save()
-    else:
-      order.products.add(order_product)
-  else:
-
-    order = Order.objects.create(owner=request.user,date=timezone.now())
-    
-    order.products.add(order_product)
-
-  return HttpResponseRedirect(reverse('listing:list'))
+    current_order = Order.objects.get(owner=request.user, is_ordered=False)
+    if not current_order.products.exists():
+        current_order.delete()
+    return HttpResponseRedirect(reverse('listing:cart'))
 
 
 class myproducts(ListView):
@@ -146,6 +149,5 @@ class myproducts(ListView):
     template_name = 'listing/my_product_list.html'
 
     def get_context_data(self, **kwargs):
-      context = ListView.get_context_data(self,**kwargs)
-      return context
-
+        context = ListView.get_context_data(self, **kwargs)
+        return context

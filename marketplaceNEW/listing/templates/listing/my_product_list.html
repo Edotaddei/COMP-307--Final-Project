@@ -5,14 +5,13 @@
 {% block title %}My Listings{% endblock title %}
 
 {% block content %}
-	<!--<h1>Listings</h1>-->
+	<p><br /></p>
+	<h1>My listing</h1>
 	{% if list %}
 	{% for p in list %}
 	{% if p.owner.username == request.user.username%}
-	<p>
-		<img src="{{p.image.url}}" alt="{{product.name}}" style="width: 300px;height:360px" /><br />
+		<img src="{{p.image.url}}" alt="{{product.name}}" style="height: 400px; width: 400px; object-fit: scale-down;"/> </br>
 		<a href="{% url 'listing:detail' p.id%}">{{p.name}}</a> <br />
-	</p>
 	{% endif %}
 	{% endfor %}
 	{% else %}

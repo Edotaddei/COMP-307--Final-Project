@@ -18,11 +18,14 @@
         <li class="l"><a href="{% url 'listing:list' %}">Shop</a></li>
         <li class="l"><a href="{% url 'listing:new' %}">Sell</a></li>
         <li class="r"><a href="{% url 'account:account_info' %}"><i class="fa fa-user"></i></a></li>
-        <li class="r"><a href="{% url 'chat:index' %}"><i class="fa fa-comments"></i></a></li>
+        {% if user.is_authenticated %}
+        <li class="r"><a href="{% url 'chat:room' request.user.username%}"><i class="fa fa-comments"></i></a></li>
         <li class="r"><a href="{% url 'listing:cart' %}"><i class="fa fa-shopping-cart"></i></a></li>
+        {% endif %}
     </ul>
     {% block content %}
     {% endblock %}
+    <br/>
 <footer>
     &copy; Vintage By Yourself
 </footer>

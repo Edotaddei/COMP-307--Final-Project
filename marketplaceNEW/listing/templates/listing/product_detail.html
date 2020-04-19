@@ -15,7 +15,7 @@ Available: {{product.count}}<br/>
 	<a href="{% url 'listing:update' product.id%}">Update this item</a><br/>
 	<a href="{% url 'listing:delete' product.id%}">Delete this item</a>
 {% else %}
-<a href="{% url 'listing:addtocart' product.id%}">Add to cart</a> <br/>
+<a href="{% url 'listing:add' product.id%}">Add to cart</a> <br/>
 
 
 <a href="{%url 'chat:room' product.owner.username%}">Contact Seller</a> <br/>

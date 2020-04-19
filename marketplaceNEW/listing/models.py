@@ -34,30 +34,26 @@ class Address(models.Model):
 
 
 class OrderProduct(models.Model):
-    owner_name = models.CharField(max_length=200)
     is_ordered = models.BooleanField(default=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     count = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.count} of {self.product.name}"
+        return self.product.name
 
 
 class Order(models.Model):
-    id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateTimeField()
     is_ordered = models.BooleanField(default=False)
     products = models.ManyToManyField(OrderProduct)
-    
-
 
     def __str__(self):
         return self.owner.username
 
-    def gettotalprice(self):
+    def get_total_price(self):
         price = 0
-        for prod in self.products.all():
-            price += prod.product.price*prod.count
+        for p in self.products.all():
+            price += p.product.price * p.count
         return price
