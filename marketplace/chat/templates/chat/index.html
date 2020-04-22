@@ -1,0 +1,29 @@
+{% extends 'chat/base.html' %}
+{% load static%}
+
+{% block title %} Chat {% endblock title %}
+
+{% block content %}
+
+<h3> What chat room would you like to enter? </h3>
+<div class="chat">
+    <input id="room-name-input" type="text" size="100"/><br/>
+    <input id="room-name-submit" type="button" value="Enter"/>
+</div>
+
+
+    <script>
+        document.getElementById('room-name-input').focus();
+        document.getElementById('room-name-input').onkeyup = function(e) {
+            //if enter or return is pressed
+            if (e.keyCode === 13) {  
+                document.getElementById('room-name-submit').click();
+            }
+        };
+
+        document.getElementById('room-name-submit').onclick = function(e) {
+            var roomName = document.getElementById('room-name-input').value;
+            window.location.pathname = '/chat/' + roomName + '/';
+        };
+    </script>
+{% endblock content %}

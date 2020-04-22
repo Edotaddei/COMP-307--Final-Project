@@ -1,0 +1,31 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+    
+    
+    <h1>Login</h1>
+    <div class="account">
+        {{ form.non_field_errors }}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label> Username </label><input type="text" name="username" />
+            {{ form.username.errors }}
+    
+        
+        <label>Password</label><input type="password" name="password" />
+            {{ form.password.errors }}
+            <br>
+        <input type="submit" value="Login" />
+        <br/><br/>
+    </form>
+    <p>You don't have an account yet?</p>
+    <p> Signup <a href="{% url 'account:signup' %}"> here </a></p>
+    </div>
+
+    
+
+{% endblock content %}
+

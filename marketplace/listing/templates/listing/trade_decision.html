@@ -1,0 +1,24 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block title %}Trade Decision{% endblock title %}
+
+{% block content %}
+
+	<form action="" method="POST">
+		{% csrf_token %}
+		Would you like to make this trade: <br/>
+		<p>
+			<input type="radio" name="trade_decision" value='yes'>
+			<label for="trade_decision">Yes</label>
+		</p>
+		<p>
+			<input type="radio" name="trade_decision" value='no'>
+			<label for="trade_decision">No</label>
+		</p>
+		<p>
+			<input type="submit" value="Confirm">
+		</p>
+	</form>
+
+{% endblock content %}

@@ -1,0 +1,79 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+body {
+	font-family:"Montserrat";
+	}
+
+article {font-family: "Courier New"}
+
+.page-content{
+	position: absolute;
+	top:5%;
+	left: 10%;
+	right: 10%;
+}
+
+.nav-bar{
+	overflow: hidden;
+	background-color: #c5d5c5;
+	position: fixed;
+	top:0;
+	width:100%;
+}
+
+.nav-bar a.l{float: left;}
+.nav-bar a.r{float: right;}
+
+.nav-bar a{
+	display: block;
+	color: black;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+.nav-bar a:hover {
+	background-color: #f0f4f0;
+}
+
+.chat a{
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.chat a:visited {
+	color: black;
+}
+
+.chat a:hover{
+	text-decoration: underline;
+}
+
+.chat textarea{
+	width:100%;
+	height:200px;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	background-color: #f8f8f8
+	outline: none;
+	resize: none;
+	padding:5px;
+	font-family: "Courier New";
+}
+
+.chat input[type=text]{
+	width:100%;	
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	outline:none;
+	padding:5px;
+	font-family: "Courier New"
+}
+
+.chat input[type=button]{
+	position: relative;
+	top:5px;
+}

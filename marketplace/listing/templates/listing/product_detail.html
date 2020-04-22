@@ -1,0 +1,32 @@
+{% extends 'listing/base.html' %}
+{% load static%}
+
+{% block title %}Product Detail{% endblock title %}
+
+{% block content %}
+
+	<h1>{{product.name}}</h1>
+	<div class="listing">
+		<table class ="detail">
+			<tr>
+				<td>
+					<img src="{{product.image.url}}">
+				</td>
+				<td class="col">
+					<b>Price: </b>{{product.price}} CAD <br/>
+					<b>Available: </b>{{product.count}}<br/>
+					<b>Description: </b>{{product.description}}<br/><br/>
+
+					{% if product.owner.username == request.user.username  %}
+						<a href="{% url 'listing:update' product.id%}">Update this item</a><br/><br>
+						<a href="{% url 'listing:delete' product.id%}">Delete this item</a> <br/><br/>
+					{% elif request.user.username %}
+						<a class="btn" href="{%url 'chat:room' product.owner.username%}">Contact Seller</a> <br/><br/>
+						<a  class="btn" href="{% url 'listing:trade' product.id%}">Trade for this item</a> <br/><br/>
+						<a class="btn" href="{% url 'listing:add' product.id%}" >Add to my cart</a>
+					{% endif %}
+				</td>
+			</tr>
+		</table>
+	</div>
+{% endblock content %}

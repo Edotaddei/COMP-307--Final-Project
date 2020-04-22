@@ -1,0 +1,40 @@
+
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %}My Orders{% endblock title %}
+
+{% block content %}
+	
+	<h1>My Orders</h1>
+	<div class="listing">
+		{% if list%}
+			<table class="order">
+				<thead>
+					<tr>
+						<th> Order ID</th>
+						<th> Ordered On</th>
+						<th> Total Cost</th>
+						<th> Details </th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for o in list %}
+						{% if o.is_ordered and o.owner == request.user%}
+							<tr>
+								<td>{{o.id}}</td>
+								<td>{{o.date.day}}/{{o.date.month}}/{{o.date.year}}</td>
+								<td>{{o.get_total_price}}</td>
+								<td><a href="{% url 'listing:orderdetails' o.id %}">View</a></td>
+							</tr>
+						{% endif %}
+	    			{% endfor %}	
+				</tbody>
+			</table>
+		{% else %}
+			<p> You haven't made any orders yet.</p>
+		{% endif %}
+		<p><a href="{% url 'account:account_info' %}">Back</a></p>
+	</div>
+{% endblock content %}
+

@@ -1,0 +1,45 @@
+
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %} Cart {% endblock title %}
+
+{% block content %}
+		
+	<h1>{{request.user.username}}'s cart</h1>
+	<div class="listing">
+		{% if orders %}
+			{% for o in orders %}
+				{% if not o.is_ordered and o.owner == request.user %}
+					{% for p in o.products.all %}
+						<table class ="cart">
+							<tr>
+								<td>
+									<img src="{{p.product.image.url}}">
+								</td>
+								<td class="col">
+									{{p.count}} x {{p}} <br/>
+									{{p.product.price}} CAD
+								</td>
+								<td class="col">
+									<a href="{% url 'listing:remove' p.id%}"><i class="fa fa-trash-o"></i></a>
+								</td>
+							</tr>
+						</table>
+					{% endfor %}
+
+					{% if o.get_total_price > 0 %}
+						<p>Total price of cart: {{o.get_total_price}} CAD</p>
+						<a href="{% url 'listing:checkout' o.id %}" class="btn">Checkout</a>
+					{%else%}
+						<p> Your cart is empty </p>
+					{% endif %}	
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			<p> Your cart is empty </p>
+		{% endif %}
+	</div>
+{% endblock content %}
+
+

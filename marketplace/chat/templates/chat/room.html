@@ -1,0 +1,64 @@
+{% extends 'chat/base.html' %}
+{% load static% }
+
+{% block title %} Room {% endblock title %}
+
+{% block content %}
+
+<h1>{{room_name}}'s chat room</h1>
+<div class="chat">
+    <p><a href="{% url 'chat:index' %}"> Go to another chatroom </a></p>
+    <textarea id="chat-log"></textarea><br/>
+    <input id="chat-message-input" type="text" size="100"/><br/>
+    <input id="chat-message-submit" type="button" value="Send"/>
+</div>
+
+<script>
+    //re-used from the code from Jimmy's lectures
+    window.onload= function(){
+
+        if(sessionStorage.getItem("msg")!= null){
+            var msg = sessionStorage.getItem("msg");
+            var input =  document.getElementById('chat-message-input');
+            input.value = msg;
+        }
+
+    }
+    var roomName = "{{ room_name }}";
+
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/chat/' + roomName + '/');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        document.getElementById('chat-log').value += (message + '\n');
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+        var label = document.getElementById("status-label");
+        label.innerHTML = "Error: " + e;
+    };
+
+    document.getElementById('chat-message-input').focus();
+    document.getElementById('chat-message-input').onkeyup = function(e) {
+        //if the enter or return key is pressed
+        if (e.keyCode === 13) {
+            document.getElementById('chat-message-submit').click();
+        }
+    };
+
+    document.getElementById('chat-message-submit').onclick = function(e) {
+        var messageInputDom = document.getElementById('chat-message-input');
+        var message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+
+        messageInputDom.value = '';
+    };
+</script>
+{% endblock content %}
+

@@ -1,0 +1,46 @@
+
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %}Order Details{% endblock title %}
+
+{% block content %}
+
+	<h1>Order Details</h1>
+	<div class="listing">
+		<p>
+      <b> Order ID: </b> {{order.id}} <br/>
+      <b> Order time: </b> {{order.date}} <br/> <br/>
+      <b> Products ordered: </b> <br/>
+      <table class="order">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Cost</th>
+          </tr>
+      
+        </thead>
+        <tbody>
+          {% for op in order.products.all  %}
+            <tr>
+              <td>{{op}}</td>
+              <td>{{op.count}}</td>
+              <td>{{op.get_product_count_price}}</td>
+            </tr>
+          {% endfor %}
+      
+        </tbody>
+      </table>
+		<br/>
+		  <b> Total cost of order: </b>{{order.get_total_price}} CAD <br/><br/>
+      <b> Shipped to: </b><br/>
+      <p>{{address.street}} {{address.number}}<br/>
+        {{address.city}} {{address.zip}}<br/>
+        {{address.country}}
+      </p>
+      <a href="{% url 'listing:myorders' %}">Back</a>
+    </p>
+	</div>
+{% endblock content %}
+

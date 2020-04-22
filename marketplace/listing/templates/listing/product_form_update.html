@@ -1,0 +1,16 @@
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %}Sell{% endblock title %}
+
+{% block content %}
+    
+    <h3> Update your product </h3>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <div class="listing">
+        	<input type="submit" value="Update" />
+        </div>
+    </form>
+{% endblock content %}

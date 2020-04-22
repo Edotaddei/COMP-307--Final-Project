@@ -1,0 +1,60 @@
+
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %}Checkout{% endblock title %}
+
+{% block content %}
+
+	<h1>Checkout</h1>
+
+  <div class="listing">
+    {% if order %}
+      <table class="order">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for op in order.products.all  %}
+            <tr>
+              <td>{{op}}</td>
+              <td>{{op.count}}</td>
+              <td>{{op.get_product_count_price}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+	 <br/><br/>
+	 <b> Total price: {{order.get_total_price}} </b>
+
+<hr/>
+
+  <p><b>Insert shipping address below</b></p>
+	   <form action="" method="post">
+		    {% csrf_token %}
+        <label> Street name: </label><input type="text" name="street" value="{{form.data.street}}" />
+      	   	  {{ form.street.errors }}
+        <label> House number: </label><input type="text" name="number" value="{{form.data.number}}" />
+      	   	  {{ form.number.errors }}
+        <label> City: </label><input type="text" name="city" value="{{form.data.city}}" />
+      		    {{ form.city.errors }}
+    	
+        <label>	ZIP: </label><input type="text" name="zip" value="{{form.data.zip}}" />
+          		{{ form.zip.errors }}
+        <label> Country: </label><input type="text" name="country" value="{{form.data.country}}" />
+          		{{ form.country.errors }}
+    	
+		    <p>
+			   <input type="submit" value="Complete order" />
+        </p>
+	   </form>
+	
+    {% endif %}
+  </div>
+{% endblock content %}
+

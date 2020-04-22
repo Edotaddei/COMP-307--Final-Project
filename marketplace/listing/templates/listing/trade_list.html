@@ -1,0 +1,81 @@
+
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %}My Trades{% endblock title %}
+
+{% block content %}
+	
+	<h1>My Trades</h1>
+	<div class="trade">
+		{% if list%}
+			{% for t in list %}
+				{% if not t.is_concluded and t.receiver_username == request.user.username %}
+					<p><b>Request</b><br>
+						{{t.requester.username}} wants 
+						{% for p in t.products.all %}
+							{% if p.product.owner == request.user %}
+								{{p}}
+							{% endif %}
+						{% endfor %}
+						in exchange of
+						{% for p in t.products.all %}
+							{% if p.product.owner == t.requester %}
+								<a href="{% url 'listing:detail' p.product.id %}" class="btn">{{p}}</a> <br/>
+							{% endif %}
+						{% endfor %}
+						<a href="{% url 'listing:tradedecision' t.id %}" class="btn"> Respond to trade</a>
+					</p>
+
+				{% elif t.is_concluded and t.receiver_username == request.user.username %}
+					<p>
+						<b> Concluded trade </b> <br>
+						{{t.requester.username}} wanted 
+						{% for p in t.products.all %}
+							{% if p.product.owner == request.user %}
+								{{p}}
+							{% endif %}
+						{% endfor %}
+						in exchange for 
+						{% for p in t.products.all %}
+							{% if p.product.owner == t.requester %}
+								{{p}}
+							{% endif %}
+						{% endfor %}
+						<br/>
+						{% if t.is_accepted  %}
+							Status: Successful
+						{% else %}
+							Status: Unsuccessful
+						{% endif %}
+
+					</p>
+				{% elif t.is_concluded and t.requester == request.user %}
+					<p>
+						<b> Concluded trade </b> <br> 
+						You offered {{t.receiver_username}}
+						{% for p in t.products.all %}
+							{% if p.product.owner == request.user %}
+								{{p}}
+							{% endif %}
+						{% endfor %}
+						in exchange for 
+						{% for p in t.products.all %}
+							{% if p.product.owner == t.requester %}
+								{{p}}
+							{% endif %}
+						{% endfor %}
+						<br/>
+						{% if t.is_accepted  %}
+							Status: Successful
+						{% else %}
+							Status: Unsuccessful
+						{% endif %}
+					</p>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	</div>
+{% endblock content %}
+
+

@@ -1,0 +1,32 @@
+
+{% extends 'listing/base.html' %}
+{% load static %}
+
+{% block title %}My Listings{% endblock title %}
+
+{% block content %}
+	
+	<h1>My listings</h1>
+	{% if list %}
+		{% for p in list %}
+			{% if p.owner.username == request.user.username and p.is_deleted == False %}
+				<table class="cart">
+					<tr>
+						<td>
+							<img src="{{p.image.url}}" alt="{{p.name}}"/>
+						</td>
+						<td class="col">
+							{{p.count}} x {{p.name}} <br/>
+							<a href="{% url 'listing:update' p.id%}">Edit</a> </br>
+							<a href="{% url 'listing:delete' p.id%}">Delete</a>
+						</td>
+					</tr>
+				</table>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<p>No products</p>
+	{% endif %}
+	<p><a href="{% url 'account:account_info' %}">Back</a></p>
+{% endblock content %}
+

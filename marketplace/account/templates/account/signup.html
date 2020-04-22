@@ -1,0 +1,30 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block title %}Signup{% endblock title %}
+
+{% block content %}
+
+<p><br /></p>
+<h1>Create User</h1>
+<div class="account">
+  <form class="form" method="post">
+    {% csrf_token %}
+      <p><label>Username: </label><input type="text" name="username" value="{{form.data.username}}" /></p>
+      {{ form.username.errors }}
+      <p><label>Email: </label><input type="text" name="email" value="{{form.data.email}}" /></p>
+      {{ form.email.errors }}
+      <p><label>Create Password: </label><input type="password" name="password" /></p>
+      {{ form.password.errors }}
+      <p><label>Confirm Password: </label><input type="password" name="password_confirm" /></p>
+      {{ form.password_confirm.errors }}
+      <p><input type="submit" value="Create" /></p>
+      <br><br><br><br><br><br>
+  </form>
+
+    <p>You already have an account?<p/>
+    <p>Login <a href="{% url 'account:login' %}"> here </a></p> 
+</div>
+
+{% endblock content %}
+
